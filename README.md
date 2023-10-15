@@ -1,2 +1,2 @@
 # muicians
- A school project
+ A school project for my assignments for a "Musicians and bands" in JavaScript
