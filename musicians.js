@@ -19,21 +19,21 @@ export default class Musicians {
 
     // Populerar #musiciansList med musiker-objekt, då kommer vi få tillgång till alla metoder i Musician-klassen.
     for ( let i = 0; i < data.length; i++ ) {
-      this.#musiciansList.push( new Musician( data[ i ].name, data[ i ].checkedIn ) );
+      this.#musiciansList.push( new Musician( data[ i ].name, data[ i ].checkedIn, data[ i ].infoMusician, data[ i ].yearOfBirth, data[ i ].currentBands, data[ i ].previuosBands, data[ i ].instruments ) );
     }
   }
 
-  //Skriver ut index och hund-objektens namn 
+  //Skriver ut index och musician-objektens namn 
   printMusicians () {
     for ( let i = 0; i < this.#musiciansList.length; i++ ) {
       console.log( `${ i + 1 }. ${ this.#musiciansList[ i ].name }` );
     }
   }
 
-  //Skriver ut index, musiker-objektens namn och ifall dem är incheckade eller inte
+  //Skriver ut index, musiker-objektens namn och ifall dem är incheckade eller inte  , yearOfBirth, currentBands, previousBands, instruments
   skrivUtMusiciansWithCheckIn () {
     for ( let i = 0; i < this.#musiciansList.length; i++ ) {
-      console.log( `${ i + 1 }. ${ this.#musiciansList[ i ].name } -> ${ this.#musiciansList[ i ].checkedIn }` );
+      console.log( `${ i + 1 }. ${ this.#musiciansList[ i ].name } -> ${ this.#musiciansList[ i ].checkedIn } -> ${ this.#musiciansList[ i ].infoMusician } -> ${ this.#musiciansList[ i ].yearOfBirth } -> ${ this.#musiciansList[ i ].currentBands } -> ${ this.#musiciansList[ i ].previuosBands } -> ${ this.#musiciansList[ i ].instruments }` );
     }
   }
 
@@ -52,7 +52,7 @@ export default class Musicians {
     let tempList = []; // Skapar en temporär lista som ska sparas i "musicians.json".
 
     for ( let i = 0; i < this.#musiciansList.length; i++ ) {
-      // Använder dataInfo som ger mig ett nytt objekt med alla hund-objektet egenskaps information.
+      // Använder dataInfo som ger mig ett nytt objekt med alla musiker-objektet egenskaps information.
       // Om vi sparar musiker-objektet direkt, kommer inte informationen från privata egenskaper med.
       tempList.push( this.#musiciansList[ i ].dataInfo() );
     }
@@ -63,7 +63,7 @@ export default class Musicians {
     } );
   }
 
-  checkInDog ( index ) {
+  checkInMusician ( index ) {
     this.#musiciansList[ index ].checkInAndOut(); // Ändrar så en musiker blir incheckad eller checkar ut.  
     this.#updateJsonFile();
   }
