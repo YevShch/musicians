@@ -1,5 +1,5 @@
 import fs from "fs";
-import Bands from "./band.js";
+import Band from "./band.js";
 
 export default class Bands {
   #bandsList = []; // Lista som håller alla band-objekt.

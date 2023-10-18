@@ -1,0 +1,15 @@
+{
+  "name": "musicians",
+  "version": "1.0.0",
+  "description": "A school project for my assignments for a \"Musicians and bands\" in JavaScript",
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "prompt-sync": "^4.2.0"
+  }
+}
