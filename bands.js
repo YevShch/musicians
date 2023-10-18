@@ -19,7 +19,7 @@ export default class Bands {
 
     // Populerar #bandsList med band-objekt, då kommer vi få tillgång till alla metoder i Band-klassen.
     for ( let i = 0; i < data.length; i++ ) {
-      this.#bandsList.push( new Band( data[ i ].nameBand, data[ i ].checkedInBand ) );
+      this.#bandsList.push( new Band( data[ i ].nameBand, data[ i ].checkedInBand, data[ i ].infoBand, data[ i ].yearOfCreation, data[ i ].yearOfBreakup, data[ i ].currentMembersList, data[ i ].previuosMembersList ) );
     }
   }
 
@@ -33,7 +33,7 @@ export default class Bands {
   //Skriver ut index, band-objektens namn och ifall dem är incheckade eller inte
   printBandsWithCheckIn () {
     for ( let i = 0; i < this.#bandsList.length; i++ ) {
-      console.log( `${ i + 1 }. ${ this.#bandsList[ i ].nameBand } -> ${ this.#bandsList[ i ].checkedInBand }` );
+      console.log( `${ i + 1 }. ${ this.#bandsList[ i ].nameBand } -> ${ this.#bandsList[ i ].checkedInBand } -> ${ this.#bandsList[ i ].infoBand } -> ${ this.#bandsList[ i ].yearOfCreation } -> ${ this.#bandsList[ i ].yearOfBreakup } -> ${ this.#bandsList[ i ].currentMembersList } -> ${ this.#bandsList[ i ].previousMembersList }` );
     }
   }
 
@@ -49,7 +49,7 @@ export default class Bands {
   }
 
   #updateJsonFile () {
-    let tempList = []; // Skapar en temporär lista som ska sparas i "musicians.json".
+    let tempList = []; // Skapar en temporär lista som ska sparas i "bands.json".
 
     for ( let i = 0; i < this.#bandsList.length; i++ ) {
       // Använder dataInfo som ger mig ett nytt objekt med alla band-objektet egenskaps information.
