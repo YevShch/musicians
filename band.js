@@ -83,7 +83,8 @@ export default class Band {
       "infoMusician": this.#infoBand,
       "year of creation": this.#yearOfCreation,
       " year of breakup": this.#yearOfBreakup,
-      "current members of the band": this.#currentBands,
-      "previous members of the band": this.#previousBands
+      "current members of the band": this.#currentMembersList,
+      "previous members of the band": this.#previousMembersList
     }
   }
+}
