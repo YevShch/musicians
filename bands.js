@@ -19,7 +19,13 @@ export default class Bands {
 
     // Populerar #bandsList med band-objekt, då kommer vi få tillgång till alla metoder i Band-klassen.
     for ( let i = 0; i < data.length; i++ ) {
-      this.#bandsList.push( new Band( data[ i ].nameBand, data[ i ].checkedInBand, data[ i ].infoBand, data[ i ].yearOfCreation, data[ i ].yearOfBreakup, data[ i ].currentMembersList, data[ i ].previuosMembersList ) );
+      this.#bandsList.push( new Band(
+        data[ i ].nameBand,
+        data[ i ].infoBand,
+        data[ i ].yearOfCreation,
+        data[ i ].yearOfBreakup,
+        data[ i ].currentMembersList,
+        data[ i ].previuosMembersList ) );
     }
   }
 
@@ -31,15 +37,19 @@ export default class Bands {
   }
 
   //Skriver ut index, band-objektens namn och ifall dem är incheckade eller inte
-  printBandsWithCheckIn () {
-    for ( let i = 0; i < this.#bandsList.length; i++ ) {
-      console.log( `${ i + 1 }. ${ this.#bandsList[ i ].nameBand } -> ${ this.#bandsList[ i ].checkedInBand } -> ${ this.#bandsList[ i ].infoBand } -> ${ this.#bandsList[ i ].yearOfCreation } -> ${ this.#bandsList[ i ].yearOfBreakup } -> ${ this.#bandsList[ i ].currentMembersList } -> ${ this.#bandsList[ i ].previousMembersList }` );
-    }
+  printInfoBand ( i ) {
+    console.log( `${ i + 1 }. ${ this.#bandsList[ i ].nameBand }->
+     ${ this.#bandsList[ i ].infoBand } -> 
+     ${ this.#bandsList[ i ].yearOfCreation } ->
+     ${ this.#bandsList[ i ].yearOfBreakup }-> 
+     ${ this.#bandsList[ i ].currentMembersList } -> 
+     ${ this.#bandsList[ i ].previousMembersList }` );
   }
 
 
-  addBandToList ( nameBand ) {
-    this.#bandsList.push( new Band( nameBand ) ); // Lägger till en ny band i #bandsList.
+
+  addBandToList ( nameBand, infoBand, yearOfCreation, yearOfBreakup, currentMembersList, previousMembersList ) {
+    this.#bandsList.push( new Band( nameBand, infoBand, yearOfCreation, yearOfBreakup, currentMembersList, previousMembersList ) ); // Lägger till en ny band i #bandsList.
     this.#updateJsonFile(); // Uppdaterar "bands.json".
   }
 
@@ -63,12 +73,8 @@ export default class Bands {
     } );
   }
 
-  checkInBand ( index ) {
-    this.#bandsList[ index ].checkInAndOutBand(); // Ändrar så ett band blir incheckad eller checkar ut.  
-    this.#updateJsonFile();
-  }
-
   getLength () {
     return this.#bandsList.length;
   }
-} 
+}
+

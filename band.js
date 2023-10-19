@@ -1,23 +1,21 @@
 export default class Band {
   #nameBand;
-  #checkedInBand;
   #infoBand;
   #yearOfCreation;
   #yearOfBreakup;
   #currentMembersList;
   #previousMembersList;
-  
 
 
-  constructor ( nameBand, checkedInBand = false, infoBand, yearOfCreation, yearOfBreakup = false, currentMembersList, previousMembersList ) {
+
+  constructor ( nameBand, infoBand, yearOfCreation, yearOfBreakup, currentMembersList, previousMembersList ) {
     this.#nameBand = nameBand;
-    this.#checkedInBand = checkedInBand;
     this.#infoBand = infoBand;
     this.#yearOfCreation = yearOfCreation;
     this.#yearOfBreakup = yearOfBreakup;
     this.#currentMembersList = currentMembersList;
     this.#previousMembersList = previousMembersList;
-    
+
 
   }
 
@@ -25,16 +23,8 @@ export default class Band {
     return this.#nameBand;
   }
 
-  get checkedInBand () {
-    return this.#checkedInBand;
-  }
-
   set nameBand ( newNameBand ) {
     this.#nameBand = newNameBand;
-  }
-
-  checkInAndOutBand () {
-    this.#checkedInBand = !this.#checkedInBand;
   }
 
   get infoBand () {
@@ -73,13 +63,12 @@ export default class Band {
     this.#previousMembersList = newPreviousMembersList;
   }
 
-  
+
   // Skapar ett objekt med bands egenskaps information. 
   // Används när vi ska skicka in till "bands.json". 
-  dataBandInfo () {
+  dataInfo () {
     return {
       "name of the band": this.#nameBand,
-      "checkedIn": this.#checkedInBand,
       "infoMusician": this.#infoBand,
       "year of creation": this.#yearOfCreation,
       " year of breakup": this.#yearOfBreakup,
