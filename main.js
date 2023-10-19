@@ -18,14 +18,13 @@ Meny
 2. Remove a musician.
 3. Add a new band to a musician.
 4. Remove a band from a musician.
-5. Display info about a musician.
-6. Incheckning of musicians.
-7. Create a new band.
-8. Remove a band from the list of bands.
-9. Add a musician to a band.
-10. Remove a musician from a band.
-11. Display info about a band.
-12. Incheckning of bands.
+5. Display information about a musician.
+6. Create a new band.
+7. Remove a band from the list of bands.
+8. Add a musician to a band.
+9. Remove a musician from a band.
+10. Display information about a band.
+
 A. End the programm.
 
 Val ->`);
@@ -34,7 +33,7 @@ Val ->`);
 
   switch ( val.trim().toUpperCase() ) {
     case "1":
-      musiciansList.addMusicianToList( prompt( "What is the name of the new musician? -> " ) );
+      createMusician();
       break;
     case "2":
       removeMusician();
@@ -46,28 +45,22 @@ Val ->`);
       musiciansList.removeBandFromList( prompt( "What is the name of the band you want to remove? -> " ) )
       break;
     case "5":
-      musiciansList.printMusicianInfo( prompt( "...? -> " ) );
+      displayInfoMusician();
       break;
     case "6":
-      checkMusicians();
+      createBand();
       break;
     case "7":
-      bandsList.addBandToList( prompt( "What the new band called? -> " ) );
-      break;
-    case "8":
       removeBand();
       break;
-    case "9":
+    case "8":
       bandsList.addMusicianToList( prompt( "What is the name of the musician you want to add? -> " ) );
       break;
-    case "10":
+    case "9":
       bandsList.removeMusicianFromList( prompt( "What is the name of the musician you want to remove? -> " ) )
       break;
-    case "11":
-      bandsList.printBandInfo( prompt( "...? -> " ) );
-      break;
-    case "12":
-      checkBands();
+    case "10":
+      displayInfoBand();
       break;
     case "A":
       console.log( "The program ends!" );
@@ -75,40 +68,80 @@ Val ->`);
       break;
 
     default:
-      console.log( "Du måste välja mellan 1 - 4 eller A!" );
+      console.log( "You must enter between 1 - 10 or A!" );
   }
 }
 
+function createMusician () {
+  musiciansList.addMusicianToList( prompt( "What is the name of the new musician? -> " ),
+    prompt( "Enter info abot the musician: " ),
+    prompt( "What year was the musician born? -> " ),
+    prompt( "The musician's current band -> " ),
+    prompt( "The musician's previous bands -> " ),
+    prompt( "What instruments does the musician play? -> " ) );
+}
+
+function createBand () {
+  bandsList.addBandToList( prompt( "What the new band called? -> " ),
+    prompt( "Enter info abot the band: " ),
+    prompt( "What year was the band created? -> " ),
+    prompt( "Year the band dissolved for bands that no longer exist -> " ),
+    prompt( "Enter current band's members -> " ),
+    prompt( "Enter previous band's members -> " ) );
+}
 function removeMusician () {
-  musiciansList.printMusicians(); // Skriver ut listan på alla hundar med index i början.
+  musiciansList.printMusicians(); // Skriver ut listan på alla musiker med index i början.
   const val = prompt( "Enter the index for the musician you want to remove ->" );
 
   if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
     console.log( "You must enter a number!" );
   }
-  if ( val <= hundLista.getLength() && val >= 1 ) {
+  if ( val <= musiciansList.getLength() && val >= 1 ) {
     musiciansList.removeMusicianFromList( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
   } else {
     console.log( `The number must be between 1 and ${ musiciansList.getLength() }` );
   }
 }
 
-function checkMusicians () {
-  let run = true;
-  while ( run ) {
-    musiciansList.printMusiciansWithCheckIn(); // Skriver ut listan på alla musiker med index i början.
-    console.log( "Enter B. to go back" );
-    const val = prompt( "Enter the index for the musician you want to check in/out ->" );
+function removeBand () {
+  musiciansList.printBands(); // Skriver ut listan på alla band med index i början.
+  const val = prompt( "Enter the index for the band you want to remove ->" );
 
-    if ( val.trim().toUpperCase() === "B" ) { // Om användaren skrivit in B ska vi avsluta loopen och gå tillbaka till huvudmenyn. 
-      run = false;
-    } else if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
-      console.log( "You must enter a number!" );
-    }
-    if ( val <= musiciansList.getLength() && val >= 1 ) {
-      musiciansList.checkInMusician( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
-    } else {
-      console.log( `The number should be between 1 to ${ musiciansList.getLength() }` );
-    }
+  if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
+    console.log( "You must enter a number!" );
+  }
+  if ( val <= bandsList.getLength() && val >= 1 ) {
+    bandsList.removeBandFromList( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
+  } else {
+    console.log( `The number must be between 1 and ${ musiciansList.getLength() }` );
   }
 }
+
+function displayInfoMusician () {
+  musiciansList.printMusicians(); // Skriver ut listan på alla musiker med index i början.
+  const val = prompt( "Enter the index for the musician you want to get information ->" );
+
+  if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
+    console.log( "You must enter a number!" );
+  }
+  if ( val <= musiciansList.getLength() && val >= 1 ) {
+    musiciansList.printInfoMusician( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
+  } else {
+    console.log( `The number must be between 1 and ${ musiciansList.getLength() }` );
+  }
+}
+
+function displayInfoBand () {
+  bandsList.printBands(); // Skriver ut listan på alla musiker med index i början.
+  const val = prompt( "Enter the index for the band you want to get information ->" );
+
+  if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
+    console.log( "You must enter a number!" );
+  }
+  if ( val <= bandsList.getLength() && val >= 1 ) {
+    bandsList.printInfoBand( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
+  } else {
+    console.log( `The number must be between 1 and ${ musiciansList.getLength() }` );
+  }
+}
+
