@@ -19,7 +19,7 @@ export default class Musicians {
 
     // Populerar #musiciansList med musiker-objekt, då kommer vi få tillgång till alla metoder i Musician-klassen.
     for ( let i = 0; i < data.length; i++ ) {
-      this.#musiciansList.push( new Musician( data[ i ].name, data[ i ].checkedIn, data[ i ].infoMusician, data[ i ].yearOfBirth, data[ i ].currentBands, data[ i ].previuosBands, data[ i ].instruments ) );
+      this.#musiciansList.push( new Musician( data[ i ].name, data[ i ].infoMusician, data[ i ].yearOfBirth, data[ i ].currentBands, data[ i ].previuosBands, data[ i ].instruments ) );
     }
   }
 
@@ -30,16 +30,17 @@ export default class Musicians {
     }
   }
 
-  //Skriver ut index, musiker-objektens namn och ifall dem är incheckade eller inte  , yearOfBirth, currentBands, previousBands, instruments
-  skrivUtMusiciansWithCheckIn () {
-    for ( let i = 0; i < this.#musiciansList.length; i++ ) {
-      console.log( `${ i + 1 }. ${ this.#musiciansList[ i ].name } -> ${ this.#musiciansList[ i ].checkedIn } -> ${ this.#musiciansList[ i ].infoMusician } -> ${ this.#musiciansList[ i ].yearOfBirth } -> ${ this.#musiciansList[ i ].currentBands } -> ${ this.#musiciansList[ i ].previuosBands } -> ${ this.#musiciansList[ i ].instruments }` );
-    }
+  printInfoMusician ( i ) {
+    console.log( `${ i + 1 }. ${ this.#musiciansList[ i ].name } -> 
+    ${ this.#musiciansList[ i ].infoMusician } -> 
+    ${ this.#musiciansList[ i ].yearOfBirth } ->
+     ${ this.#musiciansList[ i ].currentBands } -> 
+     ${ this.#musiciansList[ i ].previuosBands } -> 
+     ${ this.#musiciansList[ i ].instruments }` );
   }
 
-
-  addMusicianToList ( name ) {
-    this.#musiciansList.push( new Musician( name ) ); // Lägger till en ny musiker i #musiciansList.
+  addMusicianToList ( name, infoMusician, yearOfBirth, currentBands, previousBands, instruments ) {
+    this.#musiciansList.push( new Musician( name, infoMusician, yearOfBirth, currentBands, previousBands, instruments ) ); // Lägger till en ny musiker i #musiciansList.
     this.#updateJsonFile(); // Uppdaterar "musicians.json".
   }
 
@@ -61,11 +62,6 @@ export default class Musicians {
       if ( err ) throw err;
       console.log( 'Data written to file' );
     } );
-  }
-
-  checkInMusician ( index ) {
-    this.#musiciansList[ index ].checkInAndOut(); // Ändrar så en musiker blir incheckad eller checkar ut.  
-    this.#updateJsonFile();
   }
 
   getLength () {

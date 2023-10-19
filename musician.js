@@ -1,6 +1,5 @@
 export default class Musician {
   #name;
-  #checkedIn;
   #infoMusician;
   #yearOfBirth;
   #currentBands;
@@ -8,9 +7,8 @@ export default class Musician {
   #instruments;
 
 
-  constructor ( name, checkedIn = false, infoMusician, yearOfBirth, currentBands, previousBands, instruments ) {
+  constructor ( name, infoMusician, yearOfBirth, currentBands, previousBands, instruments ) {
     this.#name = name;
-    this.#checkedIn = checkedIn;
     this.#infoMusician = infoMusician;
     this.#yearOfBirth = yearOfBirth;
     this.#currentBands = currentBands;
@@ -23,17 +21,10 @@ export default class Musician {
     return this.#name;
   }
 
-  get checkedIn () {
-    return this.#checkedIn;
-  }
-
   set name ( newName ) {
     this.#name = newName;
   }
 
-  checkInAndOut () {
-    this.#checkedIn = !this.#checkedIn;
-  }
 
   get infoMusician () {
     return this.#infoMusician;
@@ -70,16 +61,16 @@ export default class Musician {
   set instruments ( newInstruments ) {
     this.#instruments = newInstruments;
   }
+
   // Skapar ett objekt med musikernas egenskaps information. 
   // Används när vi ska skicka in till "musicians.json". 
   dataInfo () {
     return {
       "name": this.#name,
-      "checkedIn": this.#checkedIn,
       "infoMusician": this.#infoMusician,
-      "year of birth": this.#yearOfBirth,
-      "current bands": this.#currentBands,
-      "previous bands": this.#previousBands,
+      "yearOfBirth": this.#yearOfBirth,
+      "currentBands": this.#currentBands,
+      "previousBands": this.#previousBands,
       "instruments": this.#instruments
     };
   }
