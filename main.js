@@ -1,181 +1,230 @@
+import fs from "fs";
 import PromptSync from "prompt-sync";
+import Band from "./band.js";
 import Musicians from "./musicians.js";
-import Bands from "./bands.js";
 
 const prompt = PromptSync( { sigint: true } );
-const musiciansList = new Musicians();
-const bandsList = new Bands();
-
+const bandsList = JSON.parse( fs.readFileSync( "bands.json" ) );
 
 let run = true;
 while ( run ) {
-  console.log( `
-Meny
+  console.log( `Meny
 
-1. Create a new musician.
-2. Remove a musician.
-3. Add a new band to a musician.
-4. Remove a band from a musician.
-5. Display information about a musician.
-6. Create a new band.
-7. Remove a band from the list of bands.
-8. Add a musician to a band.
-9. Remove a musician from a band.
-10. Display information about a band.
+. Skapa en ny band
+. Skriv ut alla band
+. Redigera en band
+Q. Avsluta programmet
+`);
+  const choice = prompt( "-> " ).trim().toUpperCase();
 
-A. End the programm.
-
-Val ->`);
-
-  const val = prompt();
-
-  switch ( val.trim().toUpperCase() ) {
+  switch ( choice ) {
     case "1":
-      createMusician();
+      createOrEditBand();
       break;
+
     case "2":
-      removeMusician();
+      console.clear();
+      if ( bandsList.length > 0 ) {
+        printAllBands();
+      } else {
+        console.log( "Finns inga band i listan" );
+      }
       break;
+
     case "3":
-      musiciansList.addBandToList( prompt( "What is the name of the band do you want to add? -> " ) );
+      if ( bandsList.length > 0 ) {
+        editMenu();
+      } else {
+        console.log( "Finns inga band i listan" );
+      }
       break;
-    case "4":
-      musiciansList.removeBandFromList( prompt( "What is the name of the band do you want to remove? -> " ) )
-      break;
-    case "5":
-      displayInfoMusician();
-      break;
-    case "6":
-      createBand();
-      break;
-    case "7":
-      removeBand();
-      break;
-    case "8":
-      bandsList.addMusicianToList( prompt( "What is the name of the musician do you want to add? -> " ) );
-      break;
-    case "9":
-      bandsList.removeMusicianFromList( prompt( "What is the name of the musician do you want to remove? -> " ) )
-      break;
-    case "10":
-      displayInfoBand();
-      break;
-    case "A":
-      console.log( "The program ends!" );
+
+    case "Q":
       run = false;
       break;
-
     default:
-      console.log( "You must enter between 1 - 10 or A!" );
+      console.log( "Du måste välja mellan 1 - 3 eller Q.\n" );
+      break;
   }
 }
 
-function createMusician () {
-  musiciansList.addMusicianToList(
-    prompt( "What is the name of the new musician? -> " ),
-    prompt( "Enter info abot the musician: " ),
-    prompt( "What year was the musician born? -> " ),
-    prompt( "The musician's current band -> " ),
-    prompt( "The musician's previous bands -> " ),
-    prompt( "What instruments does the musician play? -> " ) );
+function printAllBands () {
+  for ( let i = 0; i < bandsList.length; i++ ) {
+    console.log( `
+     ${ i + 1 }.
+  name: ${ bandsList[ i ].nameBand }
+       info about the band: ${ bandsList[ i ].infoBand }
+       date of creation: ${ bandsList[ i ].yearOfCreation }
+       date of breakup: ${ bandsList[ i ].yearOfBreakup }
+       list of current members: ${ bandsList[ i ].currentMembersList }
+       list of previous members:  ${ bandsList[ i ].previousMembersList }` );
+  }
 }
 
-function createBand () {
-  bandsList.addBandToList(
-    prompt( "What the new band called? -> " ),
-    prompt( "Enter info abot the band: " ),
-    prompt( "What year was the band created? -> " ),
-    prompt( "Year the band dissolved for bands that no longer exist -> " ),
-    addMusicianToCurrentMembersList(),
-    prompt( "Enter previous band's members -> " ) )
-}
+function createOrEditBand ( index = -1 ) {
+  let nameBand = "";
+  let infoBand = "";
+  let yearOfCreation = "";
+  let yearOfBreakup = "";
+  let currentMembers = [];
+  let previousMembers = [];
+  let menuText = "Meny - Create a band";
 
-function addMusicianToCurrentMembersList () {
+  if ( index >= 0 ) {
+    menuText = "Meny - Edit band";
+    nameBand = bandsList[ index ].nameBand;
+    infoBand = bandsList[ index ].infoBand;
+    yearOfCreation = bandsList[ index ].yearOfCreation;
+    yearOfBreakup = bandsList[ index ].yearOfBreakup;
+    currentMembers = bandsList[ index ].currentMembers;
+    previousMembers = bandsList[ index ].previousMembers;
+  }
+
   let run = true;
   while ( run ) {
-    console.log( `The list of all musicians: ` );
-    musiciansList.printMusicians();
-    console.log( `
-    R. Choose the musician from the list of musicians
-    S. Create a new musician if he/she is not in the list
-    Q. Finish the adding of musicians
-    Val:  `);
+    console.log( `${ menuText }
 
-    const val = prompt();
+1. Name   -> ${ nameBand }
+2. Information -> ${ infoBand }
+3. Year of creation    -> ${ yearOfCreation }
+4. Year of breakup   -> ${ yearOfBreakup }
+5. Current members   -> ${ currentMembers }
+6. Previous members  -> ${ previousMembers }
 
-    switch ( val.trim().toUpperCase() ) {
-      case "R":
-        prompt( "Enter the index for the musician do you want to add ->" );
+S. Save
+B. Go back to the meny
+  `);
+
+    const choice = prompt().trim().toUpperCase()
+
+    switch ( choice ) {
+      case "1":
+        nameBand = prompt( "Name -> " );
         break;
+
+      case "2":
+        infoBand = prompt( "Information -> " );
+        break;
+
+      case "3":
+        yearOfCreation = prompt( "Year of creation -> " );
+        break;
+
+      case "4":
+        yearOfBreakup = prompt( "Year of breakup -> " );
+        break;
+
+      case "5":
+        currentMembers = pickMusicians();
+        break;
+
+      case "6":
+        previousMembers = pickMusicians();
+        break;
+
       case "S":
-        prompt( createMusician() );
-        break;
-
-      case "Q":
-        console.log( "The list of current members is ready" );
+        if ( index >= 0 ) {
+          bandsList[ index ].nameBand = nameBand;
+          bandsList[ index ].infoBand = infoBand;
+          bandsLis[ index ].yearOfCreation = yearOfCreation;
+          bandsLis[ index ].yearOfBreakup = yearOfBreakup;
+          bandsLis[ index ].currentMembers = currentMembers;
+          bandsLis[ index ].previousMembers = previousMembers;
+        } else {
+          bandsList.push( new Band( nameBand, infoBand, yearOfCreation, yearOfBreakup, currentMembers, previousMembers ) );
+        }
+        updateFile();
         run = false;
         break;
 
+      case "B":
+        run = false;
+        break;
       default:
-        console.log( "You must enter between 1, 2 or Q!" );
+        console.clear();
+        console.log( "You must choose between 1 - 6, S or B" );
+        break;
+    }
+  }
+}
+function pickMusicians ( bandsMembers = [] ) {
+  let musicians;
+
+  if ( bandsMembers.length > 0 ) {
+    musicians = new Musicians( bandsMembers );
+  } else {
+    musicians = new Musicians();
+  }
+
+  console.log( "Before - ", musicians.list );
+  let run = true;
+  while ( run ) {
+    if ( bandsMembers.length > 0 ) {
+      console.log( "Meny - Edit band/Musician" );
+    } else {
+      console.log( "Meny - Create band/musician" );
+    }
+    musicians.printList();
+    console.log( `
+L. Add a new musician
+B. Go back
+`);
+    const choice = prompt( "-> " ).trim().toUpperCase()
+
+    if ( choice === "L" ) {
+      console.log( "Write the name for the new musician." );
+      musicians.addMusicianToList( prompt( "Name -> " ) )
+
+    } else if ( choice === "B" ) {
+      run = false;
+    } else if ( Number( choice ) !== NaN ) {
+      if ( Number( choice ) > musicians.listLength() ) {
+        console.log( `There is no musician with index ${ Number( choice ) }` )
+      } else {
+        musicians.pickMusician( Number( choice ) - 1 );
+      }
+    } else {
+      if ( musicians.listLength() === 0 ) {
+        console.log( "You must choose between L or B" );
+      } else if ( musicians.listLength() === 1 ) {
+        console.log( "You must choose between 1, L or B" );
+      } else {
+        console.log( `You must choose between 1 - ${ musicians.listLength() }, L or B.` );
+      }
+    }
+  }
+  console.log( "After - ", musicians.list );
+  return musicians.listOfPickedMusicians();
+}
+
+function editMenu () {
+  let run = true;
+  while ( run ) {
+    console.log( "Meny - Edit the band" );
+    printAllBands()
+    console.log( `
+B. Go back
+`);
+    const choice = prompt( "-> " ).trim().toUpperCase();
+
+    if ( choice === "B" ) {
+      run = false;
+    } else if ( Number( choice ) !== NaN ) {
+      if ( Number( choice ) > bandsList.length ) {
+        console.log( `There is no bands with index ${ Number( choice ) }` )
+      } else {
+        createOrEditBand( Number( choice ) - 1 );
+      }
+    } else {
+      if ( bandsList.length === 1 ) {
+        console.log( "You must choose between 1 or B" );
+      } else {
+        console.log( `"You must choose between 1 - ${ bandsList.length } or B.` );
+      }
     }
   }
 }
 
-
-function removeMusician () {
-  musiciansList.printMusicians(); // Skriver ut listan på alla musiker med index i början.
-  const val = prompt( "Enter the index for the musician do you want to remove ->" );
-
-  if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
-    console.log( "You must enter a number!" );
-  }
-  if ( val <= musiciansList.getLength() && val >= 1 ) {
-    musiciansList.removeMusicianFromList( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
-  } else {
-    console.log( `The number must be between 1 and ${ musiciansList.getLength() }` );
-  }
+function updateFile () {
+  fs.writeFileSync( "bands.json", JSON.stringify( bandsList, null, 2 ) )
 }
-
-function removeBand () {
-  bandsList.printBands(); // Skriver ut listan på alla band med index i början.
-  const val = prompt( "Enter the index for the band do you want to remove ->" );
-
-  if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
-    console.log( "You must enter a number!" );
-  }
-  if ( val <= bandsList.getLength() && val >= 1 ) {
-    bandsList.removeBandFromList( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
-  } else {
-    console.log( `The number must be between 1 and ${ musiciansList.getLength() }` );
-  }
-}
-
-function displayInfoMusician () {
-  musiciansList.printMusicians(); // Skriver ut listan på alla musiker med index i början.
-  const val = prompt( "Enter the index for the musician do you want to get information ->" );
-
-  if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
-    console.log( "You must enter a number!" );
-  }
-  if ( val <= musiciansList.getLength() && val >= 1 ) {
-    musiciansList.printInfoMusician( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
-  } else {
-    console.log( `The number must be between 1 and ${ musiciansList.getLength() }` );
-  }
-}
-
-function displayInfoBand () {
-  bandsList.printBands(); // Skriver ut listan på alla musiker med index i början.
-  const val = prompt( "Enter the index for the band you want to get information ->" );
-
-  if ( Number( val ).toString() === "NaN" ) { // Kollar så att val går att parsa till ett nummer.
-    console.log( "You must enter a number!" );
-  }
-  if ( val <= bandsList.getLength() && val >= 1 ) {
-    bandsList.printInfoBand( Number( val ) - 1 ); // Tar det inskrivna valet och minskar med 1. (för arrays index börjar på 0)
-  } else {
-    console.log( `The number must be between 1 and ${ musiciansList.getLength() }` );
-  }
-}
-

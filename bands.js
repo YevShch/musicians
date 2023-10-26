@@ -2,28 +2,8 @@ import fs from "fs";
 import Band from "./band.js";
 
 export default class Bands {
-  bandsList = ( new Band
-  [
-    {
-      nameBand: "",
-      infoBand: "",
-      yearOfCreation: "",
-      yearOfBreakup: "",
-      currentMembersList:  {
-         musicianId: musicianId,
-         joined: "",
-         age: "",
-         play: musicician.instruments
-    },
-    previuosMembersList: {
-      musicianId: musicianId,
-      joined: "",
-      age: "",
-      play: musicician.instruments
-    }
-} 
-    ]
-) 
+  bandsList = [];
+  
     
   ; // Lista som håller alla band-objekt.
 
@@ -37,7 +17,7 @@ export default class Bands {
   }
 
   // Läser in alla band från "bands.json". 
-  #fetchBandData () {
+  fetchBandData () {
     const jsonString = fs.readFileSync( "bands.json" );
     const data = JSON.parse( jsonString );
 
@@ -81,16 +61,16 @@ export default class Bands {
 
   addCurrentMusician(currentMembersList ) {
     this.bandsList.push( new Band(  currentMembersList ) ); // Lägger till en ny mysiker i bandlist.
-    this.#updateJsonFile();  
+    this.updateJsonFile();  
   }
 
 
   removeBandFromList ( index ) {
     this.bandsList.splice( index, 1 ); // Tar bort en band ifrån #bandsList.
-    this.#updateJsonFile(); // Uppdaterar "bands.json".
+    this.updateJsonFile(); // Uppdaterar "bands.json".
   }
 
-  #updateJsonFile () {
+  updateJsonFile () {
     let tempList = []; // Skapar en temporär lista som ska sparas i "bands.json".
 
     for ( let i = 0; i < this.bandsList.length; i++ ) {

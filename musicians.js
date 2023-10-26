@@ -12,6 +12,7 @@ export default class Musicians {
     return this.musiciansList;
   }
 
+  
   // Läser in alla musiker från "musicians.json". 
   fetchMusicianData () {
     const jsonString = fs.readFileSync( "musicians.json" );
@@ -31,7 +32,7 @@ export default class Musicians {
   }
 
   getAge ( yearOfBirth ) {
-    age = new Date().getFullYear() - yearOfBirth
+    age = new Date().getFullYear() - this.yearOfBirth
   }
 
   printInfoMusician ( i ) {
