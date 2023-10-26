@@ -1,92 +1,104 @@
 import fs from "fs";
 import Band from "./band.js";
 
-export default class Bands {
-  bandsList = [];
-  
-    
-  ; // Lista som håller alla band-objekt.
+export default class Musicians {
+  orginList = []
+  list = [];
 
-  constructor () {
-    this.fetchBandData();
+  constructor ( bandsMembers = [] ) {
+    this.orginList = this.loadMusicians();
+    this.list = this.loadMusicians();
+
+    console.log( "Before init - ", this.list );
+    if ( bandsMembers.length > 0 ) {
+      this.setMusicians( bandsMembers );
+    }
+    console.log( "After init - ", this.list );
   }
 
-  
-  get bandsList () {
-    return this.bandsList;
-  }
+  loadMusicians () {
+    const data = JSON.parse( fs.readFileSync( "musicians1.json" ) );
+    const tempList = [];
 
-  // Läser in alla band från "bands.json". 
-  fetchBandData () {
-    const jsonString = fs.readFileSync( "bands.json" );
-    const data = JSON.parse( jsonString );
-
-    // Populerar #bandsList med band-objekt, då kommer vi få tillgång till alla metoder i Band-klassen.
     for ( let i = 0; i < data.length; i++ ) {
-      this.bandsList.push( new Band(
-        data[ i ].nameBand,
-        data[ i ].infoBand,
-        data[ i ].yearOfCreation,
-        data[ i ].yearOfBreakup,
-        data[ i ].currentMembersList,
-        data[ i ].previuosMembersList ) );
+      tempList.push( new Musician( data[ i ].name, data[ i ].picked ) );
+    }
+
+    return tempList;
+  }
+
+  setMusicians ( bandsMembers ) {
+    for ( let i = 0; i < bandsMembers.length; i++ ) {
+      const index = this.orginList.findIndex( element => element.name === bandsMembers[ i ] );
+      console.log( "Index - ", index );
+      if ( index >= 0 ) {
+        this.pickMusician( index );
+      }
     }
   }
 
-  //Skriver ut index och band-objektens namn 
-  printBands () {
-    for ( let i = 0; i < this.bandsList.length; i++ ) {
-      console.log( `${ i + 1 }. ${ this.bandsList[ i ].nameBand }` );
+  addMusicianToList ( newMusician ) {
+    if ( newMusician.length < 3 || newMusician.length > 25 ) {
+      console.log( "Måste skriva in minst 3 tecken och max 25" );
+    } else if ( this.orginList.includes( newMusician ) ) {
+      console.log( `${ newMusician } finns redan.` );
+    } else {
+      this.orginList.push( new Musician( newMusician ) );
+      this.updateFile()
     }
   }
 
-  //Skriver ut index, band-objektens namn och ifall dem är incheckade eller inte
-  printInfoBand ( i ) {
-    console.log( `
-    ${ i + 1 }. ${ this.bandsList[ i ].nameBand }->
-     ${ this.bandsList[ i ].infoBand } -> 
-     ${ this.bandsList[ i ].yearOfCreation } ->
-     ${ this.bandsList[ i ].yearOfBreakup }-> 
-     ${ this.bandsList[ i ].currentMembersList } -> 
-     ${ this.bandsList[ i ].previousMembersList }` );
+  printList () {
+    for ( let i = 0; i < this.list.length; i++ ) {
+      console.log( `${ i + 1 }. ${ this.list[ i ].name } - ${ this.list[ i ].picked }` );
+    }
   }
 
-
-
-  addBandToList ( nameBand, infoBand, yearOfCreation, yearOfBreakup, currentMembersList, previousMembersList ) {
-    this.bandsList.push( new Band( nameBand, infoBand, yearOfCreation, yearOfBreakup, currentMembersList, previousMembersList ) ); // Lägger till en ny band i #bandsList.
-    this.updateJsonFile(); // Uppdaterar "bands.json".
+  pickMusician ( index ) {
+    this.list[ index ].picked = !this.list[ index ].picked;
   }
 
-
-  addCurrentMusician(currentMembersList ) {
-    this.bandsList.push( new Band(  currentMembersList ) ); // Lägger till en ny mysiker i bandlist.
-    this.updateJsonFile();  
+  listLength () {
+    return this.list.length;
   }
 
+  listOfPickedMusicians () {
+    const templist = [];
 
-  removeBandFromList ( index ) {
-    this.bandsList.splice( index, 1 ); // Tar bort en band ifrån #bandsList.
-    this.updateJsonFile(); // Uppdaterar "bands.json".
-  }
-
-  updateJsonFile () {
-    let tempList = []; // Skapar en temporär lista som ska sparas i "bands.json".
-
-    for ( let i = 0; i < this.bandsList.length; i++ ) {
-      // Använder dataInfo som ger mig ett nytt objekt med alla band-objektet egenskaps information.
-      // Om vi sparar band-objektet direkt, kommer inte informationen från privata egenskaper med.
-      tempList.push( this.bandsList[ i ].dataInfo() );
+    for ( let i = 0; i < this.list.length; i++ ) {
+      if ( this.list[ i ].picked ) {
+        templist.push( this.list[ i ].name )
+      }
     }
 
-    fs.writeFileSync( './bands.json', JSON.stringify( tempList, null, 2 ), ( err ) => {
-      if ( err ) throw err;
-      console.log( 'Data written to file' );
-    } );
+    return templist;
   }
 
-  getLength () {
-    return this.bandsList.length;
+  updateFile () {
+    fs.writeFileSync( "musicians.json", JSON.stringify( this.orginList, null, 2 ) )
   }
 }
 
+class Musician {
+
+  name;
+  picked;
+  info;
+  dateOfBirth;
+  currentBands = [];
+  previousBands = [];
+  instruments = [];
+  pickedInstruments;
+
+  constructor ( name, picked = false, info, dateOfBirth, currentBands, previousBands, instruments, pickedInstruments = false ) {
+    this.name = name;
+    this.picked = picked;
+    this.info = info;
+    this.dateOfBirth = dateOfBirth;
+    this.age = age;
+    this.currentBands = currentBands;
+    this.previousBands = previousBands;
+    this.instruments = instruments;
+    this.pickedInstruments = pickedInstruments;
+  }
+}
