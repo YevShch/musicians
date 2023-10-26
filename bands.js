@@ -37,15 +37,20 @@ export default class Musicians {
     }
   }
 
-  addMusicianToList ( newMusician ) {
-    if ( newMusician.length < 3 || newMusician.length > 25 ) {
-      console.log( "Måste skriva in minst 3 tecken och max 25" );
-    } else if ( this.orginList.includes( newMusician ) ) {
-      console.log( `${ newMusician } finns redan.` );
-    } else {
-      this.orginList.push( new Musician( newMusician ) );
-      this.updateFile()
-    }
+  // addMusicianToList ( newMusician ) {
+  //   if ( newMusician.length < 3 || newMusician.length > 25 ) {
+  //     console.log( "Måste skriva in minst 3 tecken och max 25" );
+  //   } else if ( this.orginList.includes( newMusician ) ) {
+  //     console.log( `${ newMusician } finns redan.` );
+  //   } else {
+  //     this.orginList.push( new Musician( newMusician ) );
+  //     this.updateFile()
+  //   }
+  // }
+
+  addMusicianToList ( name, picked, info, dateOfBirth, currentBands, previousBands, instruments, pickedInstruments ) {
+    this.orginList.push( new Musician( name, picked, info, dateOfBirth, currentBands, previousBands, instruments, pickedInstruments ) );
+    this.updateFile()
   }
 
   printList () {
@@ -75,7 +80,7 @@ export default class Musicians {
   }
 
   updateFile () {
-    fs.writeFileSync( "musicians.json", JSON.stringify( this.orginList, null, 2 ) )
+    fs.writeFileSync( "musicians1.json", JSON.stringify( this.orginList, null, 2 ) )
   }
 }
 
@@ -95,7 +100,6 @@ class Musician {
     this.picked = picked;
     this.info = info;
     this.dateOfBirth = dateOfBirth;
-    this.age = age;
     this.currentBands = currentBands;
     this.previousBands = previousBands;
     this.instruments = instruments;
